@@ -1,0 +1,44 @@
+{
+  "name": "react",
+  "version": "1.0.0",
+  "description": "React example starter project",
+  "keywords": [
+    "react",
+    "starter"
+  ],
+  "main": "src/index.js",
+  "dependencies": {
+    "@alan-ai/alan-sdk-web": "^1.8.10",
+    "@material-ui/core": "4.11.2",
+    "@material-ui/icons": "4.11.2",
+    "axios": "^0.21.1",
+    "dateformat": "4.3.1",
+    "dotenv": "^8.2.0",
+    "pure-react-carousel": "1.27.6",
+    "react": "17.0.0",
+    "react-dom": "17.0.0",
+    "react-infinite-scroll-component": "5.1.0",
+    "react-router-dom": "5.2.0",
+    "react-router-transition": "2.0.0",
+    "react-scripts": "3.4.3",
+    "react-simple-pull-to-refresh": "1.2.0",
+    "react-slick": "0.27.13",
+    "slick-carousel": "1.8.1",
+    "words-to-numbers": "^1.5.1"
+  },
+  "devDependencies": {
+    "typescript": "3.8.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

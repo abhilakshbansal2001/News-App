@@ -1,0 +1,51 @@
+.article-img {
+  width: 100%;
+  overflow: hidden;
+  padding-top: 10px;
+  height: 50vh;
+}
+.close-article {
+  position: absolute;
+  right: 20px;
+  top: -10px;
+  color: #97978e;
+  cursor: pointer;
+  /* text-decoration: it; */
+}
+.article-img img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-position: center;
+}
+.article-content {
+  padding: 5% !important;
+}
+.article-content h1 {
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.sub-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.article-author,
+.article-time {
+  display: flex;
+  align-items: center;
+}
+.article-news {
+  margin-top: 2rem;
+  padding-bottom: 65px;
+}
+.article-news > p {
+  line-height: 1.5;
+  font-size: 20px;
+}
+.para-heading {
+  font-weight: 800;
+  font-size: 30px;
+}

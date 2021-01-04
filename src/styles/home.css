@@ -1,0 +1,130 @@
+.date-home {
+  font-weight: 600;
+  font-size: 13px;
+  color: #000;
+  opacity: 0.4;
+  margin-left: 8%;
+  margin-top: 40px;
+  /* margin-bottom:10px; */
+}
+h2.today {
+  font-size: 35px;
+  margin: 0;
+  margin-top: 10px;
+  font-weight: 800;
+  color: #000 !important;
+  opacity: 1 !important;
+  margin-left: 8%;
+}
+.card-container {
+  /* text-align: center */
+}
+.MuiGridListTile-root.makeStyles-gridListTile-5{
+  /* width: 50%; */
+  height: 300px !important;
+}
+.card {
+  border-radius: 30px;
+  background: #ffffff;
+  box-shadow: 20px 20px 69px #ebebeb, -10px -10px 69px #ffffff;
+  width: 90%;
+  height: 280px;
+  /* height: 90%; */
+  margin: 30px auto;
+  position: relative;
+}
+.card * {
+  z-index: 10;
+}
+.width-image {
+  z-index: 1;
+  border-radius: 30px;
+  object-fit: cover;
+}
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 30px;
+}
+.card h3 {
+  color: white;
+  position: absolute;
+  bottom: 18px;
+  left: 20px;
+  font-size: 26px;
+}
+.card .author {
+  color: white;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 13px;
+}
+.scroll {
+  margin-bottom: 65px;
+}
+
+.container-title{
+  position: relative;
+}
+
+.title-yesterday{
+  /* z-index: 100; */
+  color: blue;
+  font-size: 2rem;
+  position: absolute;
+  /* bottom: -; */
+  bottom: 0;
+  left: 15px;
+}
+
+/* //Yesterday */
+.yesterday {
+  margin-bottom: 10px;
+  padding: 0 8%;
+  min-height: 50vh;
+}
+.yesterday .today {
+  margin-bottom: 30px;
+}
+.yesterday-home {
+  font-weight: 600;
+  font-size: 13px;
+  color: #000;
+  opacity: 0.4;
+  /* margin-left:8%; */
+  margin-top: 40px;
+}
+.yesterday-day {
+  font-size: 35px;
+  margin: 0;
+  margin-top: 10px;
+  font-weight: 800;
+  color: #000 !important;
+  opacity: 1 !important;
+  margin-bottom: 40px;
+}
+.yesterday-image {
+  border-radius: 10px;
+}
+.parso {
+  margin-top: 10px;
+}
+
+.time-parso {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* //Media Queries */
+@media (min-width: 980px) {
+  .card {
+    height: 500px;
+  }
+}

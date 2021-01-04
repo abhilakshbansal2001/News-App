@@ -1,0 +1,14 @@
+.query-content {
+  padding: 0 5%;
+}
+
+.app-bar-query {
+  /* border-radius: 50px; */
+  background-color: #f8f9fa !important;
+  box-shadow: none !important;
+  padding: 1rem 0 !important;
+}
+
+.heading-query {
+  margin-top: 1rem;
+}
