@@ -14,6 +14,45 @@
   left: 10px;
   bottom: 10px;
   color: white;
+
   font-weight: 700;
   font-size: 20px;
+}
+
+.element-c{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+.element-div{
+  position: relative;
+  height: 300px;
+  cursor: pointer;
+}
+.element-image{
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  
+  object-fit: cover;
+  object-position: top;
+  position: relative;
+}
+.element-cap{
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-weight: bolder;
+  font-size: 1.8rem;
+  color: white;
+  text-transform: capitalize;
+}
+
+@media (max-width: 980px) {
+  .element-c{
+    margin: 0 5%;
+    grid-template-columns: 1fr;
+    /* grid-gap: 10px; */
+  }
 }

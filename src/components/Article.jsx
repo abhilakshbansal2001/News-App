@@ -1,4 +1,4 @@
-import React,{useState,useContext} from "react";
+import React,{useState,useContext, useEffect} from "react";
 import Divider from "@material-ui/core/Divider";
 import "../styles/article.css";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -7,11 +7,22 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { useLocation, useHistory } from "react-router-dom";
 import {ArticleContext} from '../Context/ContextApi'
 
-export default function Article({setValue,...props}) {
+export default function Article() {
   const history = useHistory();
   // setValue('');
-  const [article,setArticle] = useContext(ArticleContext);
-  console.log(article);
+  // const [article,setArticle] = useContext(ArticleContext);
+  const [article,,,,,,,,,,,,,,,,,toggleDrawer] = useContext(ArticleContext);
+
+  // console.log(article , "hfrdtr");
+  // useEffect(() => {
+  //   if(!article){
+  //     if(history.length == 0){
+  //       history.replace("/home")
+  //     }else{
+  //       history.goBack();
+  //     }
+  //   }
+  // } , [])
   return (
     <>
     {article && <div>
@@ -19,9 +30,9 @@ export default function Article({setValue,...props}) {
       <HighlightOffIcon
         className="close-article"
         onClick={() => {
-          history.goBack();
+          toggleDrawer(false)();
         }}
-        style={{marginRight:'50px'}}
+        style={{marginTop:'25px'}}
       />
        <div
         style={{

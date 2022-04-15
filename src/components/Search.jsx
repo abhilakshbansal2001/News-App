@@ -32,6 +32,8 @@ export default function Search({setValue}) {
   const history = useHistory();
   function addSearchBtn(e) {
     document.querySelector(".inp").classList.add("focused");
+    document.querySelector(".search-btn-div").classList.add("focused");
+
     document.querySelector(".search-icon").classList.add("focused");
     document.querySelector(".search-btn").classList.add("focused");
     document.querySelector(".search-body").classList.add("focused");
@@ -39,10 +41,13 @@ export default function Search({setValue}) {
   }
   function removeSearchBtn(e) {
     document.querySelector(".inp").classList.remove("focused");
+    document.querySelector(".search-btn-div").classList.remove("focused");
     document.querySelector(".search-icon").classList.remove("focused");
     document.querySelector(".search-btn").classList.remove("focused");
     document.querySelector(".search-body").classList.remove("focused");
     document.querySelector(".input").classList.remove("focused");
+    
+
   }
 
   const [search, setSearch] = useState("");
@@ -130,6 +135,10 @@ export default function Search({setValue}) {
                 // onBlur={removeSearchBtn}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if(e.key == 'Enter')
+                    SearchQuery();
+                }}
               />
               <SearchIcon className="search-icon " />
               <CloseIcon
@@ -139,14 +148,17 @@ export default function Search({setValue}) {
                 }}
               />
             </div>
-            <Button
-              className="search-btn "
-              variant="outlined"
-              style={{ borderColor: "green", color: "green" }}
-              onClick={SearchQuery}
-            >
-              Search
-            </Button>
+            <div className="search-btn-div">
+
+              <Button
+                className="search-btn "
+                variant="outlined"
+                style={{ borderColor: "green", color: "green" }}
+                onClick={SearchQuery}
+              >
+                Search
+              </Button>
+            </div>
           </div>
         </div>
         <div className="search-body" onClick={removeSearchBtn}>

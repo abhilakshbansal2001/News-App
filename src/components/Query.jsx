@@ -22,7 +22,10 @@ const useStyles = makeStyles((theme) => ({
     position: "relative"
   },
   title: {
-    flexGrow: 1,
+    // flexGrow: 1,
+    // width:"100%",
+    marginLeft:"auto",
+    marginRight:"auto",
     textAlign: "center",
     fontWeight: 900,
     fontSize: "25px",
@@ -125,8 +128,6 @@ export default function Query({setValue,...props}) {
         <div
           className="list-parso"
           style={{
-            // width: "100%",
-
             marginBottom: "65px"
           }}
         >

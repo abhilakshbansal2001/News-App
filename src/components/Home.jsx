@@ -40,11 +40,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Home({setValue}) {
+export default function Home({setValue , toggleDrawer}) {
 
 
   const classes = useStyles();
-  const [article,setArticle,today, setToday,yesterday, setYesterday,parso, setParso] = useContext(ArticleContext);
+  const [,,today, setToday,yesterday, setYesterday,parso, setParso] = useContext(ArticleContext);
 
 
   function getYesterdaysDate() {
@@ -279,10 +279,10 @@ export default function Home({setValue}) {
               paddingBottom: "65px"
             }}
           >
-            <Lists news={parso.data.articles[1]}  />
-            <Lists news={parso.data.articles[2]}  />
-            <Lists news={parso.data.articles[3]}  />
-            <Lists news={parso.data.articles[4]}  />
+            <Lists news={parso.data.articles[1]} toggleDrawer={toggleDrawer} />
+            <Lists news={parso.data.articles[2]} toggleDrawer={toggleDrawer} />
+            <Lists news={parso.data.articles[3]} toggleDrawer={toggleDrawer} />
+            <Lists news={parso.data.articles[4]} toggleDrawer={toggleDrawer} />
             {/* <Lists url = {parso.data.articles[1].url} title={parso.data.articles[1].title} content={parso.data.articles[1].content} publishedAt={parso.data.articles[1].publishedAt} author={parso.data.articles[1].author} urlToImage={parso.data.articles[1].urlToImage} description={parso.data.articles[1].description}   />
             <Lists url = {parso.data.articles[2].url} title={parso.data.articles[2].title} content={parso.data.articles[2].content} publishedAt={parso.data.articles[2].publishedAt} author={parso.data.articles[2].author} urlToImage={parso.data.articles[2].urlToImage} description={parso.data.articles[2].description}  />
             <Lists url = {parso.data.articles[3].url} title={parso.data.articles[3].title} content={parso.data.articles[3].content} publishedAt={parso.data.articles[3].publishedAt} author={parso.data.articles[3].author} urlToImage={parso.data.articles[3].urlToImage} description={parso.data.articles[3].description}  />

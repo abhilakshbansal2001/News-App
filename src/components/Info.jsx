@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 const category = [
   "business",
   "entertainment",
+  "food",
   "general",
   "health",
   "science",
@@ -98,12 +99,13 @@ export default function Info({setValue}) {
   const theme = useTheme();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [modalName, setModalName] = useState("");
+  // const [name, setname] = useState("");
   const [modalEmail, setModalEmail] = useState("");
   const [personName, setPersonName] = React.useState([]);
   const [language, setLanguage] = React.useState([]);
   const [genre, setGenre] = React.useState([]);
-  const [outLanguage, setOutLanguage] = React.useState([]);
+  // const [country, setCountry] = React.useState(null);
+  // const [outLanguage, setOutLanguage] = React.useState([]);
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
@@ -111,35 +113,35 @@ export default function Info({setValue}) {
       ? JSON.parse(localStorage.getItem("name"))
       : "Full Name";
     setName(na);
-    setModalName(na);
+    // setname(na);
     const em = localStorage.getItem("email")
       ? JSON.parse(localStorage.getItem("email"))
       : "Email@email.com";
     setEmail(em);
-    setModalEmail(em);
+    // setModalEmail(em);
     const l = localStorage.getItem("lang")
       ? JSON.parse(localStorage.getItem("lang"))
       : [];
     setLanguage(l);
-    setOutLanguage(l);
+    // setOutLanguage(l);
     const g = localStorage.getItem("genre")
       ? JSON.parse(localStorage.getItem("genre"))
       : [];
     setGenre(g);
-    setPersonName(g);
+    // setPersonName(g);
 
     setValue('info')
 
   }, []);
 
   const handleChange = (event) => {
-    setPersonName(event.target.value);
+    setGenre(event.target.value);
   };
   const handleLanguageChange = (event) => {
     setLanguage(event.target.value);
   };
 
-  useEffect(() => {}, [email]);
+  // useEffect(() => {}, [email]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -150,14 +152,16 @@ export default function Info({setValue}) {
   };
 
   function saveDetails() {
-    localStorage.setItem("name", JSON.stringify(modalName));
-    localStorage.setItem("email", JSON.stringify(modalEmail));
-    localStorage.setItem("genre", JSON.stringify(personName));
+    localStorage.setItem("name", JSON.stringify(name));
+    // localStorage.setItem("country", JSON.stringify(country));
+    localStorage.setItem("email", JSON.stringify(email));
+    localStorage.setItem("genre", JSON.stringify(genre));
     localStorage.setItem("lang", JSON.stringify(language));
-    setName(modalName);
-    setEmail(modalEmail);
-    setOutLanguage(language);
-    setGenre(personName);
+    // setName(name);
+    // setEmail(modalEmail);
+    // setCountry(modalCountry);
+    // setOutLanguage(language);
+    // setGenre(personName);
     handleClose();
   }
 
@@ -193,8 +197,8 @@ export default function Info({setValue}) {
                   style={{ margin: 8 }}
                   placeholder="Ex:- Abhilaksh Bansal"
                   //  helperText="Full width!"
-                  onChange={(e) => setModalName(e.target.value)}
-                  value={modalName}
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
                   fullWidth
                   margin="normal"
                   InputLabelProps={{
@@ -211,8 +215,8 @@ export default function Info({setValue}) {
                   label="Email"
                   style={{ margin: 8 }}
                   placeholder="Ex:- ab@ba.com"
-                  onChange={(e) => setModalEmail(e.target.value)}
-                  value={modalEmail}
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                   fullWidth
                   margin="normal"
                   InputLabelProps={{
@@ -237,7 +241,7 @@ export default function Info({setValue}) {
                     labelId="demo-mutiple-chip-label"
                     id="demo-mutiple-chip"
                     multiple
-                    value={personName}
+                    value={genre}
                     onChange={handleChange}
                     input={<Input id="select-multiple-chip" />}
                     renderValue={(selected) => (
@@ -257,7 +261,7 @@ export default function Info({setValue}) {
                       <MenuItem
                         key={name}
                         value={name}
-                        style={getStyles(name, personName, theme)}
+                        style={getStyles(name, genre, theme)}
                       >
                         {name}
                       </MenuItem>
@@ -364,7 +368,7 @@ export default function Info({setValue}) {
             </div>
           </div>
           <div className="personal-cat-content">
-            {outLanguage.length !== 0 || genre.length !== 0 ? (
+            {language.length !== 0 || genre.length !== 0 ? (
               <>
                 <h5 style={{ margin: 0, marginBottom: "10px" }}>Genre</h5>
                 {genre.map((gen) => {
@@ -372,7 +376,7 @@ export default function Info({setValue}) {
                 })}
                 <div className="lang-div">
                   <h5 style={{ margin: 0, marginBottom: "10px" }}>Language</h5>
-                  {outLanguage.map((lang) => {
+                  {language.map((lang) => {
                     return <Chip label={lang} variant="outlined" />;
                   })}
                 </div>

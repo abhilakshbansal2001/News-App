@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, useContext } from "react";
 import "./styles.css";
 import LabelBottomNavigation from "./components/BottomNavigation";
 import {
@@ -6,6 +6,7 @@ import {
   Switch,
   Route,
   Redirect,
+
   useParams
 } from "react-router-dom";
 import Home from "./components/Home";
@@ -16,16 +17,19 @@ import Info from "./components/Info";
 import Query from "./components/Query";
 import Article from "./components/Article";
 import Drawer from "./components/Drawer";
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+// import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Information from "./components/Information";
 import NewsCard from "./components/NewsCard";
 import Source from "./components/Source";
-import { AnimatedRoute } from "react-router-transition";
+// import { AnimatedRoute } from "react-router-transition";
 import About from "./components/About";
 import Alan from './Alan/Alan'
+import { ArticleContext } from "./Context/ContextApi";
 
 export default function App() {
   const [value, setValue] = useState("home");
-
+  const [,,,,,,,,,,,,,,,,anchor ,toggleDrawer] = useContext(ArticleContext)    
 
 
   return (
@@ -33,14 +37,22 @@ export default function App() {
       <Router>
         <LabelBottomNavigation value={value} setValue={setValue} />
         <Drawer value={value} setValue={setValue} />
-
+        <SwipeableDrawer
+            anchor={'bottom'}
+            open={anchor}
+            onClose={toggleDrawer(false)}
+            onOpen={toggleDrawer(true)}
+        >
+          {/* <div>Hello world</div> */}
+        <Article />
+        </SwipeableDrawer>
         <div>
           <Switch>
             <Route exact path="/">
               <Redirect to="/home" />
             </Route>
             <Route path="/home" >
-              <Home value={value} setValue={setValue} />
+              <Home value={value} setValue={setValue} toggleDrawer={toggleDrawer} />
               {/* <Query /> */}
             </Route>
             <Route path="/category">
@@ -70,7 +82,7 @@ export default function App() {
             <Route path="/ai/news" >
               <NewsCard />
             </Route>
-            <AnimatedRoute
+            {/* <AnimatedRoute
               path="/article"
               component={Article}
               atEnter={{ offset: -100 }}
@@ -79,7 +91,7 @@ export default function App() {
               mapStyles={(styles) => ({
                 transform: `translateX(${styles.offset}%)`
               })}
-            />
+            /> */}
           </Switch>
         </div>
       </Router>

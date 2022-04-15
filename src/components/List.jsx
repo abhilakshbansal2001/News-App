@@ -27,14 +27,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ItemsList({news : {urlToImage,author,description,publishedAt,title,content,url}}) {
   const classes = useStyles();
-  const [article,setArticle] = useContext(ArticleContext);
+  const [,setArticle,,,,,,,,,,,,,,,,toggleDrawer] = useContext(ArticleContext);
   const history = useHistory();
 
   function ArticleClick(){
     setArticle({
       urlToImage,author,publishedAt,title,description,content,url
     });
-    history.push('/article')
+    // console.log(toggleDrawer(true) + " nufabifk ja kfj  ")
+    toggleDrawer(true)()
+    // history.push('/article')
   }
 
   return (
@@ -57,7 +59,7 @@ export default function ItemsList({news : {urlToImage,author,description,publish
           padding: "0",
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
+          // alignItems: "center",
           margin: "15px 0",
           width: "100%"
         }}
@@ -67,12 +69,13 @@ export default function ItemsList({news : {urlToImage,author,description,publish
             alt="Remy Sharp"
             src={urlToImage && urlToImage}
             height="100"
-            width="100px"
-            style={{ borderRadius: "10px", marginRight: "10px" }}
+            width="100"
+            style={{ borderRadius: "10px", marginRight: "10px"}}
           />
         </ListItemAvatar>
         <ListItemText
           primary={title && title}
+          style={{width:"100% !important"}}
           secondary={
             <React.Fragment>
               <Typography
@@ -83,9 +86,16 @@ export default function ItemsList({news : {urlToImage,author,description,publish
               >
                 {author && author}
               </Typography>
-              {
-                description && description.substring(0, 144) 
-              }...
+              <Typography component="p"
+                variant="body1"
+                className={classes.block}
+                color="textPrimary"
+                style={{width:"100%" , overflowX:"hidden"}}>
+                {
+                  description?.substring(0, 124) 
+                }...
+
+              </Typography>
               <Typography
                 component="div"
                 variant="body4"
@@ -107,3 +117,4 @@ export default function ItemsList({news : {urlToImage,author,description,publish
     </div>
   );
 }
+
