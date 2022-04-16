@@ -25,11 +25,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ItemsList({news : {urlToImage,author,description,publishedAt,title,content,url}}) {
+export default function ItemsList({news : {image : urlToImage,author,description,published_at : publishedAt,title,content,url}}) {
   const classes = useStyles();
   const [,setArticle,,,,,,,,,,,,,,,,toggleDrawer] = useContext(ArticleContext);
   const history = useHistory();
-
+  if(!urlToImage){
+    urlToImage = "/images/newsCover.jpg"
+  }
   function ArticleClick(){
     setArticle({
       urlToImage,author,publishedAt,title,description,content,url

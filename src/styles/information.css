@@ -1,0 +1,16 @@
+.information-voice{
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(4,1fr);
+}
+.info-h1{
+    margin-bottom: 40px;
+}
+
+@media (max-width : 900px){
+    .information-voice{
+        display: grid;
+        grid-gap: 1rem;
+        grid-template-columns: repeat(1,1fr);
+    }
+}

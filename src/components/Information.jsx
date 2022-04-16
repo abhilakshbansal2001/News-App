@@ -1,6 +1,8 @@
 import React from 'react';
-import { Grid, Grow, Typography } from '@material-ui/core';
+// import { Grid, Grow, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import "../styles/information.css";
+
 // import useStyles from './styles.js';
 
 const infoCards = [
@@ -41,17 +43,20 @@ const Information = ({ articles, activeArticle }) => {
 
     return (
         <div style={{
-            height:'100vh',
+            minHeight:'100vh',
             display:'flex',
+            textAlign:"center",
             justifyContent:'center',
             alignItems:'center',
-            flexDirection:'column'
+            marginBottom : "70px",
+            flexDirection:'column',
+            // padding : "0 5%",
         }}>
         {/* <img className={classes.image} height={'200px'} src="https://www.simplilearn.com/ice9/free_resources_article_thumb/How-to-Build-a-Career-in-AI-and-Machine-Learning-2.jpg" alt=""/> */}
         <div className="info-h1">
             <h1 style={{fontWeight:'800'}}>Voice Assistant </h1>
         </div>
-      <Grow in>
+      {/* <Grow in>
         <Grid className={classes.container} container alignItems="stretch" spacing={3}>
           {infoCards.map((infoCard) => (
             <Grid item xs={12} sm={6} md={4} lg={3} className={classes.infoCard}>
@@ -67,7 +72,20 @@ const Information = ({ articles, activeArticle }) => {
             </Grid>
           ))}
         </Grid>
-      </Grow>
+      </Grow> */}
+      <div className='information-voice'>
+      {infoCards.map((infoCard) => (
+            <div className={classes.infoCard}>
+              <div className={classes.card} style={{ backgroundColor: infoCard.color }}>
+                <h5 style={{fontWeight:'900'}}>{infoCard.title}</h5>
+                {infoCard.info ? <h6 style={{
+                    fontWeight:'300'
+                }}><strong>{infoCard.title.split(' ')[2]}</strong>: <br />{infoCard.info}</h6> : null}
+                <h6>Try saying: <br /> <i>{infoCard.text}</i></h6>
+              </div>
+            </div>
+          ))}
+      </div>
       </div>
     );
 

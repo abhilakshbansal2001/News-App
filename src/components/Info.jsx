@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 const category = [
   "business",
   "entertainment",
-  "food",
+  // "food",
   "general",
   "health",
   "science",

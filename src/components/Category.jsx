@@ -12,7 +12,7 @@ const catImages = {
   business : "https://xioyuna.com/envato/yui/demo/Yui/img/categories/travel.jpg",
   technology : "https://image.freepik.com/free-vector/futuristic-mobile-technology_46706-680.jpg",
   science : "https://images.ctfassets.net/hrltx12pl8hq/2yLJmfUi2QujkWc4SK5DN0/b1fb61f162c480a73d19de05afed3794/shutterstock_510957727-min.jpg?fit=fill&w=800&h=300", 
-  food : "https://xioyuna.com/envato/yui/demo/Yui/img/categories/food.jpg",
+  general : "https://thumbs.dreamstime.com/b/newspapers-showing-theresa-may-black-white-london-uk-circa-june-front-page-day-general-elections-which-104040850.jpg",
 }
 
 const all = [

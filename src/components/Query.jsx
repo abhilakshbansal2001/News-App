@@ -38,18 +38,20 @@ export default function Query({setValue,...props}) {
   const history = useHistory();
   const [hasMore, setHasMore] = useState(true);
   const [items, setItems] = useState();
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
+  let lang = JSON.parse(localStorage.getItem("lang") )|| ["en"];
+  // console.log(lang.join(",") + " Lanfganjfa ")
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
   let query = useQuery();
   const searchQuery = query.get("q");
   // let page = 1;
-
+  // `https://newsapi.org/v2/everything?q=${searchQuery.toLowerCase()}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
   useEffect(() => {
-      axios.get(`https://newsapi.org/v2/everything?q=${searchQuery.toLowerCase()}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`)
+      axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=20&languages=${lang.join(",")}&keywords=${searchQuery.toLowerCase()}`)
     .then((data) => {
-      setItems({...data});
+      setItems({...data.data});
       // console.log(data.data.articles);
       console.log(data);
     })
@@ -62,31 +64,35 @@ export default function Query({setValue,...props}) {
   // setValue('');
   
   // console.log(query.get("q"), query.keys().next());
- 
+  // axios.get(`https://newsapi.org/v2/everything?q=${searchQuery.toLowerCase()}&page=${page}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`)
 
   const fetchMoreData = () => {
-    if (items && items.data.articles >= 100) {
+    if (items?.data?.length >= 100) {
       setHasMore(false);
       return;
     }
     setPage(page+1);
     console.log(page);
-    axios.get(`https://newsapi.org/v2/everything?q=${searchQuery.toLowerCase()}&page=${page}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`)
+    axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&offset=${page*20}&limit=20&languages=${lang.join(",")}&keywords=${searchQuery.toLowerCase()}`)
     .then((ta) => {
+      console.log(ta);
       if(!ta)
         setHasMore(false)
       setItems({
         ...items,
-        data : {
+        data : [
           ...items.data,
-          articles:[
-            ...items.data.articles,
-            ...ta.data.articles
-          ]
-        }
+          ...ta?.data.data
+          // ...items.data,
+          // articles:[
+          //   ...items.data.articles,
+          //   ...ta.data.articles
+          // ]
+
+        ]
         });
       // console.log(data.data.articles);
-      // console.log(data);
+      console.log(items  , " : Items");
     })
     .catch(() => {
       console.log("something went wrong");
@@ -137,7 +143,7 @@ export default function Query({setValue,...props}) {
                           }}
           >
             <InfiniteScroll
-              dataLength={items ? items.data.articles.length : page*20}
+              dataLength={items ? items.data.length : page*20}
               next={fetchMoreData}
               hasMore={hasMore}
               loader={<h4>Loading...</h4>}
@@ -147,7 +153,7 @@ export default function Query({setValue,...props}) {
                 </p>
               }
             >
-              {items && items.data.articles.map((news) => (
+              { items?.data?.map((news) => (
                
               //  <Lists url={news.url} title={news.title} content={news.content} publishedAt={news.publishedAt} author={news.author} urlToImage={news.urlToImage} description={news.description}   />
                <Lists news={news}  />

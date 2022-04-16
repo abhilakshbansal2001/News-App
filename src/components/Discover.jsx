@@ -8,6 +8,7 @@ import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import Typography from '@material-ui/core/Typography';
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
@@ -71,25 +72,54 @@ export default function Discover({setValue}) {
   // const [sources, setSources] = useState();
   // const [mustSee, setMustSee] = useState();
 
-  const category = JSON.parse(localStorage.getItem("genre") );
-
+  const category = JSON.parse(localStorage.getItem("genre") ) || ["general"];
+  const lang = JSON.parse(localStorage.getItem("lang")) || ["en"];
   useEffect(() => {
     axios.get("http://ip-api.com/json")
       .then(res => {
         console.log(res , "Teri maa ki chit");
         const name = res?.data?.country;
         const code = res?.data?.countryCode?.toLowerCase();
-        if(code){
-          axios.get(`https://newsapi.org/v2/top-headlines?country=${code}&pageSize=6&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`)
+        // if(code){
+          // `https://newsapi.org/v2/top-headlines?country=${code}&pageSize=6&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
+          
+          axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=6&countries=${code}`)
           .then((data) => {
-            setCountryDiscover({...data});
+            setCountryDiscover({...data.data});
             // console.log(data);
           })
           .catch((err) => {
             console.log("something went wrong",err);
           })
 
-        }
+          if(!discover)
+          axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=20&countries=${code}&languages=${lang.join(",")}&categories=${category.join(",")}`)
+          .then((data) => {
+            setDiscover({...data.data});
+          })
+          .catch((err) => {
+            console.log("something went wrong",err);
+          })
+    
+          
+    
+        //Sources
+        if(!sources)
+        
+        // `https://newsapi.org/v2/sources?country=in&pageSize=15&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
+        axios.get(`http://api.mediastack.com/v1/sources?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&keywords=${name}`)
+        // .then(data => JSON.stringify(data))
+        .then((res) => {
+          setSources(res.data.data);
+          // console.log(JSON.stringify(data) + " source ");
+          // console.log(res.data);
+        })
+        .catch((err) => {
+          console.log("something went wrong",err);
+        })
+        setValue('discover')
+
+        // }
         console.log(name, "SEX" , code)
         setCountry({name , code})
       })
@@ -103,31 +133,8 @@ export default function Discover({setValue}) {
 
   useEffect(() => {
     const ac = new AbortController();
+    // `https://newsapi.org/v2/top-headlines?country=in&${category && category[0] && `category=${category[0]}`}&pageSize=20&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
 
-    if(!discover)
-      axios.get(`https://newsapi.org/v2/top-headlines?country=in&${category && category[0] && `category=${category[0]}`}&pageSize=20&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`)
-      .then((data) => {
-        setDiscover({...data});
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log("something went wrong",err);
-      })
-
-      
-
-    //Sources
-    if(!sources)
-    axios.get(`https://newsapi.org/v2/sources?country=in&pageSize=15&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`)
-    .then((data) => {
-      setSources({...data});
-      // console.log(data);
-      // console.log(data);
-    })
-    .catch((err) => {
-      console.log("something went wrong",err);
-    })
-    setValue('discover')
    return () => ac.abort();
 
 
@@ -198,11 +205,11 @@ export default function Discover({setValue}) {
               <div className="text">Something Title heu this is slick</div>
             </div> */}
           
-            {discover && discover.data && discover.data.articles.map(dis => {
-              return <div className="slider-content">
+            {discover?.data.map(dis => {
+              return <a className="slider-content" target="_BLANK " href={dis.url}>
                 <div className="slider-image">
                   <img
-                  src={dis.urlToImage}
+                  src={dis.image || "/images/newsCover.jpg"}
                   height="100%"
                   width="100%"
                   alt=""
@@ -211,7 +218,7 @@ export default function Discover({setValue}) {
                   <div className="text">{dis.title}</div>
                 </div>
               
-            </div>
+            </a>
             })}
             
             
@@ -224,7 +231,7 @@ export default function Discover({setValue}) {
       </div>
       <div className="sources" style={{padding : "0% 5%"}}>
         <div className="source-heading">
-          <h2>Popular Sources</h2>
+          <h2>Popular Sources in your country</h2>
           <Link to="/source" style={{textDecoration:'none'}}>
           <Button
             variant="contained"
@@ -237,7 +244,7 @@ export default function Discover({setValue}) {
         </div>
         <div className="source-content">
           <List>
-            {sources && sources.data.sources.map(source => {
+            {sources?.map(source => {
               return (
                 <>
                 <a target="_blank" href={source.url} style={{ overflowX: "visible", color: "black" ,textDecoration:'none'}}>
@@ -257,7 +264,19 @@ export default function Discover({setValue}) {
               <ListItemText
                 style={{ width: "65%" }}
                 primary={source.name}
-                secondary={source.description}
+                secondary={
+                  <React.Fragment>
+                    <div>
+                      <b> Category </b>
+                      {source.category}
+                    </div>
+                    <div>
+                      <b> Language </b>
+                      {source.language}
+                    </div>
+                    
+                </React.Fragment>
+                }
               />
               <ListItemSecondaryAction>
               
@@ -335,7 +354,7 @@ export default function Discover({setValue}) {
             // transform: "translateY(-15vh)"
           }}
         >
-          {countryDiscover?.data?.articles.map((news) => {
+          {countryDiscover?.data?.map((news) => {
             
             return <Lists news={news}  />
 

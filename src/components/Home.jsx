@@ -71,16 +71,22 @@ export default function Home({setValue , toggleDrawer}) {
 
   const parsoTo = dateFormat(getYesterdaysDate(), "isoDateTime").split("T")[0]
   const parsoFrom = dateFormat(getYesterdayBeforeDate(), "isoDateTime").split("T")[0]
-  console.log(parsoTo, parsoFrom, "><><><<>");
+  // console.log(parsoTo, parsoFrom, "><><><<>");
   useEffect(() => {
     const ac = new AbortController();
-
-
+    // const lan = localStorage.getItem("lang")
+    const lang = localStorage.getItem("lang")
+      ? JSON.parse(localStorage.getItem("lang"))
+      : ["en"];
+    
     if(!today){
-    axios.get('https://newsapi.org/v2/top-headlines?country=in&pageSize=5&apiKey=3d9acd8ce84c433ab0fba12097fcadc6')
+      // `https://newsdata.io/api/1/news?apikey=pub_65467390a18e52bd65f9f93a66f79968808e&language=${lang}`
+      // `http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&language=${lang.join(",")}`
+      // 'https://newsapi.org/v2/top-headlines?country=in&pageSize=5&apiKey=3d9acd8ce84c433ab0fba12097fcadc6'
+    axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=5`)
     .then((data) => {
-      setToday({...data});
-      console.log(data.data.articles);
+      setToday({...data.data});
+      console.log(data , "dnaif j fkjf kjw ");
     })
     .catch(() => {
       console.log("something went wrong");
@@ -88,10 +94,12 @@ export default function Home({setValue , toggleDrawer}) {
 }
     //Yesterday
   if(!yesterday){
-    axios.get(`https://newsapi.org/v2/everything?q=india&pageSize=10&from=${yestFrom}&to=${yestTo}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`)
+    // `https://newsapi.org/v2/everything?q=india&pageSize=10&from=${yestFrom}&to=${yestTo}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
+    
+    axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=8&languages=${lang.join(",")}&date=${yestFrom},${yestTo}`)
     .then((data) => {
-      setYesterday({...data});
-      console.log(data.data.articles);
+      setYesterday({...data.data});
+      // console.log(data.data.articles);
     })
     .catch(() => {
       console.log("something went wrong");
@@ -99,10 +107,11 @@ export default function Home({setValue , toggleDrawer}) {
     }
     //PARSO
     if(!parso){
-    axios.get(`https://newsapi.org/v2/everything?q=india&pageSize=5&from=${parsoFrom}&to=${parsoTo}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`, {signal: ac.signal})
+      // `https://newsapi.org/v2/everything?q=india&pageSize=5&from=${parsoFrom}&to=${parsoTo}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
+    axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=5&languages=${lang.join(",")}&date=${parsoFrom},${parsoTo}`, {signal: ac.signal})
     .then((data) => {
-      setParso({...data});
-      console.log(data.data.articles);
+      setParso({...data.data});
+      // console.log(data.data.articles);
     })
     .catch(() => {
       console.log("something went wrong");
@@ -130,19 +139,19 @@ export default function Home({setValue , toggleDrawer}) {
      
         <h2 className="today">TODAY</h2>
 
-        {today && today.data.articles.map(news => {
+        {today?.data?.map(news => {
           return (
         <div className="card">
           <a href={news.url} target="_blank" rel="noopener noreferrer">
           <img
             className="width-image"
             alt={news.title}
-            src={news.urlToImage}
+            src={news.image || "https://media.gettyimages.com/vectors/abstract-globe-background-vector-id1311148884?s=612x612"}
             height={"100%"}
             width={"100%"}
           />
-          <h3>{news.title}  -  {news.source.name}</h3>
-          <div className="author">{news.author}</div>
+          <h3>{news.title}  -  {news.source}</h3>
+          <div className="author">{news.author || news.source || "Anonymous"}</div>
           </a>
         </div>
 
@@ -157,77 +166,12 @@ export default function Home({setValue , toggleDrawer}) {
         </div>
         <h2 className="yesterday-day">{getYesterdaysDay}</h2>
 
-        {/* <Grid container spacing={1}>
-          <Grid className="container-title" item xs={6}>
-            <img
-              className="yesterday-image"
-              alt={"potty"}
-              src="https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              height={"90%"}
-              width={"100%"}
-              
-            />
-            <h4 className="title-yesterday" >Someone Title</h4>
-          </Grid>
-          <Grid className="container-title" item xs={6}>
-            <img
-              className="yesterday-image"
-              alt={"potty"}
-              src="https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              height={"110%"}
-              width={"100%"}
-            />
-            <h4 className="title-yesterday" >Someone Title</h4>
-          </Grid>
-          <Grid className="container-title" item xs={6}>
-            <img
-              className="yesterday-image"
-              alt={"potty"}
-              src="https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              height={"105%"}
-              width={"100%"}
-              style={{ marginTop: "-10%" }}
-            />
-            <h4 className="title-yesterday" >Someone Title</h4>
-          </Grid>
-          <Grid className="container-title" item xs={6}>
-            <img
-              className="yesterday-image"
-              alt={"potty"}
-              src="https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              height={"100%"}
-              width={"100%"}
-              style={{ marginTop: "15%" }}
-            />
-            <h4 className="title-yesterday" >Someone Title</h4>
-          </Grid>
-          <Grid className="container-title" item xs={6}>
-            <img
-              className="yesterday-image"
-              alt={"potty"}
-              src="https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              height={"100%"}
-              width={"100%"}
-              style={{ marginBottom: "-10%" }}
-            />
-          </Grid>
-          <Grid className="container-title" item xs={6}>
-            <img
-              className="yesterday-image"
-              alt={"potty"}
-              src="https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              height={"90%"}
-              width={"100%"}
-              style={{ marginTop: "15%" }}
-            />
-            <h4 className="title-yesterday" >Someone Title</h4>
-          </Grid>
-        </Grid> */}
+  
         <GridList cellHeight={180} className={classes.gridList}>
        
-        {yesterday && yesterday.data.articles.map((tile) => (
+        {yesterday?.data?.map((tile) => (
           <GridListTile className={classes.gridListTile} key={tile.urlToImage}>
-            <img src={tile.urlToImage} alt={tile.title} />
+            <img src={tile.image || "https://elegalmetrology.jharkhand.gov.in/japnet/images/news.jpg"} alt={tile.title} />
             <a href={tile.url} target="_blank" rel="noopener noreferrer">
             <GridListTileBar
               title={tile.title}
@@ -255,11 +199,11 @@ export default function Home({setValue , toggleDrawer}) {
         <img
           className="width-image"
           alt={"potty"}
-          src={parso.data.articles[0].urlToImage}
+          src={parso?.data[0].image || "https://elegalmetrology.jharkhand.gov.in/japnet/images/news.jpg"}
           height={"100%"}
           width={"100%"}
         />
-        <h3>{parso.data.articles[0].title}</h3>
+        <h3>{parso?.data[0].title}</h3>
         <div className="time-parso author">
           <HistoryIcon /> <span style={{ marginLeft: "10px" }}>2 Days Ago</span>
         </div>
@@ -279,10 +223,10 @@ export default function Home({setValue , toggleDrawer}) {
               paddingBottom: "65px"
             }}
           >
-            <Lists news={parso.data.articles[1]} toggleDrawer={toggleDrawer} />
-            <Lists news={parso.data.articles[2]} toggleDrawer={toggleDrawer} />
-            <Lists news={parso.data.articles[3]} toggleDrawer={toggleDrawer} />
-            <Lists news={parso.data.articles[4]} toggleDrawer={toggleDrawer} />
+            <Lists news={parso?.data[1]} />
+            <Lists news={parso?.data[2]} />
+            <Lists news={parso?.data[3]} />
+            <Lists news={parso?.data[4]} />
             {/* <Lists url = {parso.data.articles[1].url} title={parso.data.articles[1].title} content={parso.data.articles[1].content} publishedAt={parso.data.articles[1].publishedAt} author={parso.data.articles[1].author} urlToImage={parso.data.articles[1].urlToImage} description={parso.data.articles[1].description}   />
             <Lists url = {parso.data.articles[2].url} title={parso.data.articles[2].title} content={parso.data.articles[2].content} publishedAt={parso.data.articles[2].publishedAt} author={parso.data.articles[2].author} urlToImage={parso.data.articles[2].urlToImage} description={parso.data.articles[2].description}  />
             <Lists url = {parso.data.articles[3].url} title={parso.data.articles[3].title} content={parso.data.articles[3].content} publishedAt={parso.data.articles[3].publishedAt} author={parso.data.articles[3].author} urlToImage={parso.data.articles[3].urlToImage} description={parso.data.articles[3].description}  />
