@@ -25,27 +25,30 @@ export default function Article() {
   // } , [])
   return (
     <>
-    {article && <div>
+    {article && <div className="article">
 
-      <HighlightOffIcon
-        className="close-article"
-        onClick={() => {
-          toggleDrawer(false)();
-        }}
-        style={{marginTop:'25px'}}
-      />
+      
+      <div className="article-header">
        <div
         style={{
           width: "50px",
           backgroundColor: "#97978e",
           height: "6px",
           borderRadius: "50px",
-          margin: "10px auto",
-          marginTop: "25px",
-          padding: "0 5% !important"
+          // margin: "10px auto",
+          // marginTop: "25px",
+          // padding: "0 5% !important"
         }}
         className="line"
       ></div>
+        <HighlightOffIcon
+          className="close-article"
+          onClick={() => {
+            toggleDrawer(false)();
+          }}
+          
+        />
+      </div>
       {/* <Divider
         style={{ marginTop: "30px ", margin: "0 auto", width: "90%" }}
         variant="fullWidth"
