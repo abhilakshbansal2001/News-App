@@ -52,7 +52,7 @@ export default function App() {
               <Redirect to="/home" />
             </Route>
             <Route path="/home" >
-              <Home value={value} setValue={setValue} toggleDrawer={toggleDrawer} />
+              <Home value={value} setValue={setValue}  />
               {/* <Query /> */}
             </Route>
             <Route path="/category">

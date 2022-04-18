@@ -1,7 +1,6 @@
 import React, { useState, useEffect,useContext } from "react";
 import TimeToDate from "./Date";
 import dateFormat from "dateformat";
-import Grid from "@material-ui/core/Grid";
 import Lists from "./List";
 import List from "@material-ui/core/List";
 import { AnimatedRoute } from "react-router-transition";
@@ -9,6 +8,7 @@ import HistoryIcon from "@material-ui/icons/History";
 import "../styles/home.css";
 import { Link,useHistory } from "react-router-dom";
 import axios from 'axios'
+import { topHeadline , pastHeadline } from "../api/news";
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -72,21 +72,23 @@ export default function Home({setValue , toggleDrawer}) {
   const parsoTo = dateFormat(getYesterdaysDate(), "isoDateTime").split("T")[0]
   const parsoFrom = dateFormat(getYesterdayBeforeDate(), "isoDateTime").split("T")[0]
   // console.log(parsoTo, parsoFrom, "><><><<>");
-  useEffect(() => {
+  useEffect(async () => {
     const ac = new AbortController();
     // const lan = localStorage.getItem("lang")
-    const lang = localStorage.getItem("lang")
-      ? JSON.parse(localStorage.getItem("lang"))
-      : ["en"];
+    const lang = JSON.parse(localStorage.getItem("lang")) || ["en"];
     
     if(!today){
       // `https://newsdata.io/api/1/news?apikey=pub_65467390a18e52bd65f9f93a66f79968808e&language=${lang}`
       // `http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&language=${lang.join(",")}`
       // 'https://newsapi.org/v2/top-headlines?country=in&pageSize=5&apiKey=3d9acd8ce84c433ab0fba12097fcadc6'
-    axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=5`)
+    // axios.get(`https://cors-anywhere.herokuapp.com/http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=5`)
+    topHeadline()
     .then((data) => {
-      setToday({...data.data});
-      console.log(data , "dnaif j fkjf kjw ");
+      if(Array.isArray(data))
+      setToday(data);
+      else throw "Error"
+      // console.log(data , "HEllo world")
+      // console.log(data , "dnaif j fkjf kjw ");
     })
     .catch(() => {
       console.log("something went wrong");
@@ -96,10 +98,14 @@ export default function Home({setValue , toggleDrawer}) {
   if(!yesterday){
     // `https://newsapi.org/v2/everything?q=india&pageSize=10&from=${yestFrom}&to=${yestTo}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
     
-    axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=8&languages=${lang.join(",")}&date=${yestFrom},${yestTo}`)
+    // axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=8&languages=${lang.join(",")}&date=${yestFrom},${yestTo}`)
+    pastHeadline(yestFrom,yestTo,10 , "india")
     .then((data) => {
-      setYesterday({...data.data});
-      // console.log(data.data.articles);
+      if(Array.isArray(data))
+    setYesterday(data);
+    else throw "Error"
+
+      // console.log(data);
     })
     .catch(() => {
       console.log("something went wrong");
@@ -108,9 +114,14 @@ export default function Home({setValue , toggleDrawer}) {
     //PARSO
     if(!parso){
       // `https://newsapi.org/v2/everything?q=india&pageSize=5&from=${parsoFrom}&to=${parsoTo}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
-    axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=5&languages=${lang.join(",")}&date=${parsoFrom},${parsoTo}`, {signal: ac.signal})
+    // axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=5&languages=${lang.join(",")}&date=${parsoFrom},${parsoTo}`, {signal: ac.signal})
+    pastHeadline(parsoFrom,parsoTo,5 , "india")
     .then((data) => {
-      setParso({...data.data});
+      if(Array.isArray(data))
+
+      setParso(data);
+    else throw "Error"
+
       // console.log(data.data.articles);
     })
     .catch(() => {
@@ -139,19 +150,19 @@ export default function Home({setValue , toggleDrawer}) {
      
         <h2 className="today">TODAY</h2>
 
-        {today?.data?.map(news => {
+        {today?.map(news => {
           return (
         <div className="card">
           <a href={news.url} target="_blank" rel="noopener noreferrer">
           <img
             className="width-image"
             alt={news.title}
-            src={news.image || "https://media.gettyimages.com/vectors/abstract-globe-background-vector-id1311148884?s=612x612"}
+            src={news.urlToImage || "https://media.gettyimages.com/vectors/abstract-globe-background-vector-id1311148884?s=612x612"}
             height={"100%"}
             width={"100%"}
           />
-          <h3>{news.title}  -  {news.source}</h3>
-          <div className="author">{news.author || news.source || "Anonymous"}</div>
+          <h3>{news.title}  -  {news?.source?.name}</h3>
+          <div className="author">{news.author || news?.source?.name || "Anonymous"}</div>
           </a>
         </div>
 
@@ -169,14 +180,14 @@ export default function Home({setValue , toggleDrawer}) {
   
         <GridList cellHeight={180} className={classes.gridList}>
        
-        {yesterday?.data?.map((tile) => (
+        {yesterday?.map((tile) => (
           <GridListTile className={classes.gridListTile} key={tile.urlToImage}>
-            <img src={tile.image || "https://elegalmetrology.jharkhand.gov.in/japnet/images/news.jpg"} alt={tile.title} />
+            <img src={tile.urlToImage || "https://elegalmetrology.jharkhand.gov.in/japnet/images/news.jpg"} alt={tile.title} />
             <a href={tile.url} target="_blank" rel="noopener noreferrer">
             <GridListTileBar
               title={tile.title}
-              subtitle={<span>by: {tile.author}</span>}
-              actionIcon={
+              subtitle={<span>by: {tile.author || tile?.source?.name}</span>}
+              actionIcon={ 
                 <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
                   <InfoIcon />
                 </IconButton>
@@ -198,12 +209,12 @@ export default function Home({setValue , toggleDrawer}) {
       <div className="card">
         <img
           className="width-image"
-          alt={"potty"}
-          src={parso?.data[0].image || "https://elegalmetrology.jharkhand.gov.in/japnet/images/news.jpg"}
+          alt={"News"}
+          src={parso[0]?.urlToImage || "https://elegalmetrology.jharkhand.gov.in/japnet/images/news.jpg"}
           height={"100%"}
           width={"100%"}
         />
-        <h3>{parso?.data[0].title}</h3>
+        <h3>{parso[0]?.title}</h3>
         <div className="time-parso author">
           <HistoryIcon /> <span style={{ marginLeft: "10px" }}>2 Days Ago</span>
         </div>
@@ -223,14 +234,11 @@ export default function Home({setValue , toggleDrawer}) {
               paddingBottom: "65px"
             }}
           >
-            <Lists news={parso?.data[1]} />
-            <Lists news={parso?.data[2]} />
-            <Lists news={parso?.data[3]} />
-            <Lists news={parso?.data[4]} />
-            {/* <Lists url = {parso.data.articles[1].url} title={parso.data.articles[1].title} content={parso.data.articles[1].content} publishedAt={parso.data.articles[1].publishedAt} author={parso.data.articles[1].author} urlToImage={parso.data.articles[1].urlToImage} description={parso.data.articles[1].description}   />
-            <Lists url = {parso.data.articles[2].url} title={parso.data.articles[2].title} content={parso.data.articles[2].content} publishedAt={parso.data.articles[2].publishedAt} author={parso.data.articles[2].author} urlToImage={parso.data.articles[2].urlToImage} description={parso.data.articles[2].description}  />
-            <Lists url = {parso.data.articles[3].url} title={parso.data.articles[3].title} content={parso.data.articles[3].content} publishedAt={parso.data.articles[3].publishedAt} author={parso.data.articles[3].author} urlToImage={parso.data.articles[3].urlToImage} description={parso.data.articles[3].description}  />
-            <Lists url = {parso.data.articles[4].url} title={parso.data.articles[4].title} content={parso.data.articles[4].content} publishedAt={parso.data.articles[4].publishedAt} author={parso.data.articles[4].author} urlToImage={parso.data.articles[4].urlToImage} description={parso.data.articles[4].description}  /> */}
+            <Lists news={parso[1]} />
+            <Lists news={parso[2]} />
+            <Lists news={parso[3]} />
+            <Lists news={parso[4]} />
+            
           </List>
         </div>
       </div>

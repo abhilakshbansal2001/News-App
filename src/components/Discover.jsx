@@ -21,6 +21,8 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import IconButton from "@material-ui/core/IconButton";
 import Lists from "./List";
 import axios from 'axios'
+import {discoverNews , countryNews} from  "../api/news";
+import {Sources} from  "../api/source";
 import { Link,useHistory } from "react-router-dom";
 import {ArticleContext} from '../Context/ContextApi'
 
@@ -74,67 +76,76 @@ export default function Discover({setValue}) {
 
   const category = JSON.parse(localStorage.getItem("genre") ) || ["general"];
   const lang = JSON.parse(localStorage.getItem("lang")) || ["en"];
-  useEffect(() => {
-    axios.get("http://ip-api.com/json")
-      .then(res => {
-        console.log(res , "Teri maa ki chit");
-        const name = res?.data?.country;
-        const code = res?.data?.countryCode?.toLowerCase();
-        // if(code){
-          // `https://newsapi.org/v2/top-headlines?country=${code}&pageSize=6&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
+  // useEffect(() => {
+  //   axios.get("http://ip-api.com/json")
+  //     .then(res => {
+  //       console.log(res , "hello");
+  //       const name = res?.data?.country;
+  //       const code = res?.data?.countryCode?.toLowerCase();
+  //       // if(code){
+  //         // `https://newsapi.org/v2/top-headlines?country=${code}&pageSize=6&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
           
-          axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=6&countries=${code}`)
-          .then((data) => {
-            setCountryDiscover({...data.data});
-            // console.log(data);
-          })
-          .catch((err) => {
-            console.log("something went wrong",err);
-          })
+          
 
-          if(!discover)
-          axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=20&countries=${code}&languages=${lang.join(",")}&categories=${category.join(",")}`)
-          .then((data) => {
-            setDiscover({...data.data});
-          })
-          .catch((err) => {
-            console.log("something went wrong",err);
-          })
-    
-          
-    
-        //Sources
-        if(!sources)
+  //       // }
         
-        // `https://newsapi.org/v2/sources?country=in&pageSize=15&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
-        axios.get(`http://api.mediastack.com/v1/sources?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&keywords=${name}`)
-        // .then(data => JSON.stringify(data))
-        .then((res) => {
-          setSources(res.data.data);
-          // console.log(JSON.stringify(data) + " source ");
-          // console.log(res.data);
-        })
-        .catch((err) => {
-          console.log("something went wrong",err);
-        })
-        setValue('discover')
-
-        // }
-        console.log(name, "SEX" , code)
-        setCountry({name , code})
-      })
+  //       setCountry({name , code})
+  //     })
 
   
-    return () => {
+  //   return () => {
       
-    }
-  }, [])
+  //   }
+  // }, [])
   
 
   useEffect(() => {
     const ac = new AbortController();
     // `https://newsapi.org/v2/top-headlines?country=in&${category && category[0] && `category=${category[0]}`}&pageSize=20&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
+    countryNews()
+    .then((data) => {
+      // console.log(data , "nuibkj ng i7");
+      if(Array.isArray(data))
+      setCountryDiscover(data);
+      else throw "Error"
+    })
+    .catch((err) => {
+      console.log("something went wrong",err);
+    })
 
+    if(!discover)
+    // axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=20&countries=${code}&languages=${lang.join(",")}&categories=${category.join(",")}`)
+    discoverNews("in" , lang , category)
+    .then((data) => {
+      // console.log(data , "DISCOVWER")
+      if(Array.isArray(data))
+      setDiscover(data);
+      else throw "Error"
+    })
+    .catch((err) => {
+      console.log("something went wrong",err);
+    })
+
+    
+
+  //Sources
+  if(!sources)
+  
+  // `https://newsapi.org/v2/sources?country=in&pageSize=15&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
+  // axios.get(`http://api.mediastack.com/v1/sources?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&keywords=${name}`)
+  // .then(data => JSON.stringify(data))
+  Sources()
+  .then((data) => {
+    if(Array.isArray(data))
+    setSources(data);
+    else throw "Error"
+    // console.log(JSON.stringify(data) + " source ");
+    // console.log(res.data);
+  })
+  .catch((err) => {
+    console.log("something went wrong",err);
+  })
+  setValue('discover')
    return () => ac.abort();
 
 
@@ -205,7 +216,7 @@ export default function Discover({setValue}) {
               <div className="text">Something Title heu this is slick</div>
             </div> */}
           
-            {discover?.data.map(dis => {
+            {discover?.map(dis => {
               return <a className="slider-content" target="_BLANK " href={dis.url}>
                 <div className="slider-image">
                   <img
@@ -232,15 +243,7 @@ export default function Discover({setValue}) {
       <div className="sources" style={{padding : "0% 5%"}}>
         <div className="source-heading">
           <h2>Popular Sources in your country</h2>
-          <Link to="/source" style={{textDecoration:'none'}}>
-          <Button
-            variant="contained"
-            color="secondary"
-            href="#contained-buttons"
-          >
-            See All
-          </Button>
-          </Link>
+          
         </div>
         <div className="source-content">
           <List>
@@ -270,6 +273,7 @@ export default function Discover({setValue}) {
                       <b> Category </b>
                       {source.category}
                     </div>
+                    <div>{source.description}</div>
                     <div>
                       <b> Language </b>
                       {source.language}
@@ -341,7 +345,7 @@ export default function Discover({setValue}) {
             marginBottom: "3.4rem"
           }}
         >
-          What's happening in <span className="country-name">{country?.name}</span>
+          What's happening in <span className="country-name">India</span>
         </h2>
 
         <List
@@ -354,7 +358,7 @@ export default function Discover({setValue}) {
             // transform: "translateY(-15vh)"
           }}
         >
-          {countryDiscover?.data?.map((news) => {
+          {countryDiscover?.map((news) => {
             
             return <Lists news={news}  />
 

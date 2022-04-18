@@ -25,7 +25,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ItemsList({news : {image : urlToImage,author,description,published_at : publishedAt,title,content,url}}) {
+export default function ItemsList({news}) {
+  const {author,description,title,content,url} = news;
+  let urlToImage = news.urlToImage || news.image;
+  const publishedAt = news.publishedAt || news.published_at;
   const classes = useStyles();
   const [,setArticle,,,,,,,,,,,,,,,,toggleDrawer] = useContext(ArticleContext);
   const history = useHistory();
