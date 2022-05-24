@@ -1,20 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ArticleContextApi from './Context/ContextApi'
 import App from "./App";
-import * as serviceWorker from './serviceWorker';
+import store from './Reducers/store'
+import { Provider } from 'react-redux'
 
 const rootElement = document.getElementById("root");
+console.log("hello workd")
 ReactDOM.render(
-  <ArticleContextApi>
   <React.StrictMode>
+  <Provider store={store}>
     <App />
+  </Provider>
   </React.StrictMode>
-  </ArticleContextApi>
   ,
 
   rootElement
 );
 
-
-serviceWorker.register();

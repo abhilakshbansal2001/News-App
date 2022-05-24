@@ -9,10 +9,11 @@ export async function Sources(country="in" , size=5){
             }
         })
         // console.log(data)
+        localStorage.setItem("Sources" , JSON.stringify(data));
         return data;
 
     }catch(error){
-        return error;
+        return JSON.parse(localStorage.getItem("Sources")) || error;
     }
     
 }

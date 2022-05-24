@@ -1,4 +1,4 @@
-import React, { useEffect,useContext,useState } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
@@ -11,10 +11,10 @@ import { useHistory } from "react-router-dom";
 import "../styles/BottomNavigation.css";
 // import { Link, useParams } from "react-router-dom";
 // import Alan from '../Alan/Alan'
-import {ArticleContext} from '../Context/ContextApi'
 import alanBtn from "@alan-ai/alan-sdk-web";
 import wordsToNumbers from 'words-to-numbers';
-
+import { useDispatch , useSelector } from 'react-redux'
+import {setNewsArticles , setActiveArticle , incrementActiveArticle} from '../Reducers/Alan'
 
 const useStyles = makeStyles({
   root: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 export default function LabelBottomNavigation({ setValue, value }) {
   const history = useHistory();
   const classes = useStyles();
-  let { pathname } = history.location;
+  const dispatch = useDispatch();
 
   // const [,,, ,, ,, ,, ,,,newsArticle, setNewsArticle] = useContext(ArticleContext);
 
@@ -39,13 +39,12 @@ export default function LabelBottomNavigation({ setValue, value }) {
     setValue(newValue);
   };
 
-  const [,,, ,, ,, ,, ,,,newsArticles, setNewsArticles,activeArticle,setActiveArticle] = useContext(ArticleContext);
+  // const {setNewsArticles,setActiveArticle} = useContext(ArticleContext);
 
   function goTo(){
     history.push('/ai/news');
   }
 
-  const [opening, setOpening] = useState(true)
   const name = JSON.parse(localStorage.getItem("name")) ? JSON.parse(localStorage.getItem("name")) :  'User';
   useEffect(() => {
     alanBtn({
@@ -56,15 +55,20 @@ export default function LabelBottomNavigation({ setValue, value }) {
         //   setOpening(false);
         // }
           if (command === 'newHeadlines') {
-            setNewsArticles(articles);
-            setActiveArticle(-1);
+            dispatch(setNewsArticles(articles))
+            dispatch(setActiveArticle(-1))
+            // setNewsArticles(articles);
+            // setActiveArticle(-1);
+            // ;
             goTo();
             // window.location.href = 'http://localhost:3000/ai/news'
 
           // console.log(command,articles,"yoyoyo");
           } 
            else if (command === 'highlight') {
-            setActiveArticle((prevActiveArticle) => prevActiveArticle + 1);
+            // setActiveArticle((prevActiveArticle) => prevActiveArticle + 1);
+            dispatch(incrementActiveArticle(1))
+            
           } else if (command === 'open') {
             const parsedNumber = number.length > 2 ? wordsToNumbers((number), { fuzzy: true }) : number;
             const article = articles[parsedNumber - 1];
@@ -91,16 +95,11 @@ export default function LabelBottomNavigation({ setValue, value }) {
   }, [])
 
   useEffect(() => {
-    // console.log(pathname);
+  let { pathname } = history.location;
 
     handleChange(pathname.split("/")[1]);
-  }, [pathname]);
-  // useEffect(() => {
-  //   if (value) history.push(`/${value}`);
-  //   else {
-  //     history.push(`/home`);
-  //   }
-  // }, [value]);
+  }, [history]);
+
 
   return (
     <BottomNavigation

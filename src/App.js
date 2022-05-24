@@ -6,14 +6,12 @@ import {
   Switch,
   Route,
   Redirect,
-
-  useParams
 } from "react-router-dom";
-import Home from "./components/Home";
-import Category from "./components/Category";
-import Discover from "./components/Discover";
-import Search from "./components/Search";
-import Info from "./components/Info";
+import Home from "./components/Home/Home";
+import Category from "./components/Category/Category";
+import Discover from "./components/Discover/Discover";
+import Search from "./components/Search/Search";
+import Info from "./components/Info/Info";
 import Query from "./components/Query";
 import Article from "./components/Article";
 import Drawer from "./components/Drawer";
@@ -24,38 +22,43 @@ import NewsCard from "./components/NewsCard";
 import Source from "./components/Source";
 // import { AnimatedRoute } from "react-router-transition";
 import About from "./components/About";
-import Alan from './Alan/Alan'
-import { ArticleContext } from "./Context/ContextApi";
-
+import { useSelector  , useDispatch } from 'react-redux';
+import { toggleDrawer , selectDrawerState } from './Reducers/Drawer'
 export default function App() {
   const [value, setValue] = useState("home");
-  const [,,,,,,,,,,,,,,,,anchor ,toggleDrawer] = useContext(ArticleContext)    
+  const drawerState = useSelector(selectDrawerState)
+  
+  const dispatch = useDispatch()
 
 
   return (
-    <div className="App">
+    
+      <div className="App">
       <Router>
         <LabelBottomNavigation value={value} setValue={setValue} />
         <Drawer value={value} setValue={setValue} />
         <SwipeableDrawer
             anchor={'bottom'}
-            open={anchor}
-            onClose={toggleDrawer(false)}
-            onOpen={toggleDrawer(true)}
+            open={drawerState}
+            onClose={() => dispatch(toggleDrawer(false))}
+            onOpen={() => dispatch(toggleDrawer(true))}
         >
           {/* <div>Hello world</div> */}
         <Article />
         </SwipeableDrawer>
+        {/* {!navigator.onLine && <Offline />} */}
+        {/* <Offline /> */}
         <div>
           <Switch>
             <Route exact path="/">
               <Redirect to="/home" />
+              
             </Route>
-            <Route path="/home" >
+            <Route path="/home"  onEnter={() => console.log('Entered /')}>
               <Home value={value} setValue={setValue}  />
               {/* <Query /> */}
             </Route>
-            <Route path="/category">
+            <Route path="/category"  onEnter={() => setValue("category")}>
               <Category value={value} setValue={setValue} />
             </Route>
             <Route path="/discover">
@@ -82,16 +85,7 @@ export default function App() {
             <Route path="/ai/news" >
               <NewsCard />
             </Route>
-            {/* <AnimatedRoute
-              path="/article"
-              component={Article}
-              atEnter={{ offset: -100 }}
-              atLeave={{ offset: -100 }}
-              atActive={{ offset: 0 }}
-              mapStyles={(styles) => ({
-                transform: `translateX(${styles.offset}%)`
-              })}
-            /> */}
+            
           </Switch>
         </div>
       </Router>

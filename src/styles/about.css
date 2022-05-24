@@ -44,3 +44,21 @@
     cursor: pointer;
     color: black;
 }
+@media (max-width : 650px){
+    .author-about{
+        /* padding: 0% 3%; */
+        flex-direction: column;
+    }
+    .left-author , .right-author{
+        width: 100%;
+
+    }
+    .author-name{
+        text-align: center;
+    }
+    .right-author{
+        padding-bottom: 50px;
+        padding-top: 2rem;
+    }
+    
+}

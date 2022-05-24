@@ -1,9 +1,11 @@
 import React, { useState, useEffect, createRef,useContext } from 'react';
 import { Card, CardActions, CardActionArea, CardContent, CardMedia, Button, Typography,Grid,Grow } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import {ArticleContext} from '../Context/ContextApi'
+
 import {useHistory} from 'react-router-dom'
-// import useStyles from './styles';
+import { useSelector } from 'react-redux'
+import { selectActiveArticle , selectNewsArticles } from '../Reducers/Alan'
+
 
 const useStyles = makeStyles({
     media: {
@@ -106,7 +108,9 @@ const NewsCards = () => {
 
     const classes = cardStyle();
     const history = useHistory();
-    const [,,, ,, ,, ,, ,,,newsArticles, setNewsArticles,activeArticle] = useContext(ArticleContext);
+    const newsArticles = useSelector(selectNewsArticles)
+    const activeArticle = useSelector(selectActiveArticle)
+    // const {newsArticles,activeArticle} = useContext(ArticleContext);
     if(!newsArticles.length){
         history.replace("/home")
     }
@@ -116,7 +120,7 @@ const NewsCards = () => {
     {/* <h1</h1> */}
     <Grow in>
       <Grid className={classes.container} container alignItems="stretch" spacing={3}>
-        {newsArticles.map((article, i) => (
+        {newsArticles?.map((article, i) => (
           <Grid item xs={12} sm={6} md={4} lg={3} style={{ display: 'flex' }}>
             <NewsCard activeArticle={activeArticle} i={i} article={article} />
           </Grid>

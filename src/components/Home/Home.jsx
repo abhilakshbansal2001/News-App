@@ -1,23 +1,24 @@
-import React, { useState, useEffect,useContext } from "react";
-import TimeToDate from "./Date";
+import React, {  useEffect } from "react";
+import TimeToDate from "../Date";
+import { getYesterdayBeforeDate , getYesterdaysDate } from '../../utilities/Dates'
 import dateFormat from "dateformat";
-import Lists from "./List";
+import Lists from "../List";
 import List from "@material-ui/core/List";
-import { AnimatedRoute } from "react-router-transition";
 import HistoryIcon from "@material-ui/icons/History";
-import "../styles/home.css";
-import { Link,useHistory } from "react-router-dom";
-import axios from 'axios'
-import { topHeadline , pastHeadline } from "../api/news";
+import "./home.css";
+import {TodaySkeleton , PastSkeleton , ParsoSkeleton} from "./Skeleton";
+
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
-// import tileData from './tileData';
-import {ArticleContext} from '../Context/ContextApi'
+
+import { selectTodayHeadlines, fetchTodayHeadlines } from '../../Reducers/Home/today'
+import { selectYesterdayHeadlines, fetchYesterdayHeadlines } from '../../Reducers/Home/yesterday'
+import { selectParsoHeadlines, fetchParsoHeadlines } from '../../Reducers/Home/parso'
+import { useSelector, useDispatch } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,101 +41,53 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Home({setValue , toggleDrawer}) {
+export default function Home({setValue}) {
+
+
 
 
   const classes = useStyles();
-  const [,,today, setToday,yesterday, setYesterday,parso, setParso] = useContext(ArticleContext);
+
+  const dispatch = useDispatch()
+  //Today
+  const today = useSelector(selectTodayHeadlines)
+  const todayStatus = useSelector(state => state.today.status)
+  //Yesterday
+  const yesterday = useSelector(selectYesterdayHeadlines)
+  const yesterdayStatus = useSelector(state => state.yesterday.status)
+  //Parso
+  const parso = useSelector(selectParsoHeadlines)
+  const parsoStatus = useSelector(state => state.parso.status)
+
+  useEffect(() => {
+    if (todayStatus === 'idle') {
+      dispatch(fetchTodayHeadlines())
+    }
+  }, [todayStatus, dispatch])
+
+  //Yesterday
+  useEffect(() => {
+    if (yesterdayStatus === 'idle') {
+      dispatch(fetchYesterdayHeadlines())
+    }
+  }, [yesterdayStatus, dispatch])
+
+  //Parso
+  useEffect(() => {
+    if (parsoStatus === 'idle') {
+      dispatch(fetchParsoHeadlines())
+    }
+  }, [parsoStatus, dispatch])
 
 
-  function getYesterdaysDate() {
-    var date = new Date();
-    date.setDate(date.getDate() - 1);
-    return date;
-  }
-
-  function getYesterdayBeforeDate() {
-    var date = new Date();
-    date.setDate(date.getDate() - 2);
-    return date;
-  }
-
-  // const [today, setToday] = useState();
-  // const [yesterday, setYesterday] = useState();
-  // const [parso, setParso] = useState();
 
   const getYesterdaysDay = dateFormat(getYesterdaysDate(), "dddd");
   const getYesterdaysBeforeDay = dateFormat(getYesterdayBeforeDate(), "dddd");
 
-  const yestTo = dateFormat(new Date(), "isoDateTime").split("T")[0]
-  const yestFrom = dateFormat(getYesterdaysDate(), "isoDateTime").split("T")[0]
 
-  const parsoTo = dateFormat(getYesterdaysDate(), "isoDateTime").split("T")[0]
-  const parsoFrom = dateFormat(getYesterdayBeforeDate(), "isoDateTime").split("T")[0]
-  // console.log(parsoTo, parsoFrom, "><><><<>");
-  useEffect(async () => {
-    const ac = new AbortController();
-    // const lan = localStorage.getItem("lang")
-    const lang = JSON.parse(localStorage.getItem("lang")) || ["en"];
-    
-    if(!today){
-      // `https://newsdata.io/api/1/news?apikey=pub_65467390a18e52bd65f9f93a66f79968808e&language=${lang}`
-      // `http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&language=${lang.join(",")}`
-      // 'https://newsapi.org/v2/top-headlines?country=in&pageSize=5&apiKey=3d9acd8ce84c433ab0fba12097fcadc6'
-    // axios.get(`https://cors-anywhere.herokuapp.com/http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=5`)
-    topHeadline()
-    .then((data) => {
-      if(Array.isArray(data))
-      setToday(data);
-      else throw "Error"
-      // console.log(data , "HEllo world")
-      // console.log(data , "dnaif j fkjf kjw ");
-    })
-    .catch(() => {
-      console.log("something went wrong");
-    })
-}
-    //Yesterday
-  if(!yesterday){
-    // `https://newsapi.org/v2/everything?q=india&pageSize=10&from=${yestFrom}&to=${yestTo}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
-    
-    // axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=8&languages=${lang.join(",")}&date=${yestFrom},${yestTo}`)
-    pastHeadline(yestFrom,yestTo,10 , "india")
-    .then((data) => {
-      if(Array.isArray(data))
-    setYesterday(data);
-    else throw "Error"
-
-      // console.log(data);
-    })
-    .catch(() => {
-      console.log("something went wrong");
-    })
-    }
-    //PARSO
-    if(!parso){
-      // `https://newsapi.org/v2/everything?q=india&pageSize=5&from=${parsoFrom}&to=${parsoTo}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
-    // axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=5&languages=${lang.join(",")}&date=${parsoFrom},${parsoTo}`, {signal: ac.signal})
-    pastHeadline(parsoFrom,parsoTo,5 , "india")
-    .then((data) => {
-      if(Array.isArray(data))
-
-      setParso(data);
-    else throw "Error"
-
-      // console.log(data.data.articles);
-    })
-    .catch(() => {
-      console.log("something went wrong");
-    })
-  }
-
-  setValue('home');
-
-   return () => ac.abort();
-
-
-  }, [])
+  useEffect(() => {
+ setValue('home');
+}, [])
 
 
 
@@ -150,7 +103,7 @@ export default function Home({setValue , toggleDrawer}) {
      
         <h2 className="today">TODAY</h2>
 
-        {today?.map(news => {
+        {todayStatus === "completed" ? today?.map(news => {
           return (
         <div className="card">
           <a href={news.url} target="_blank" rel="noopener noreferrer">
@@ -167,7 +120,9 @@ export default function Home({setValue , toggleDrawer}) {
         </div>
 
           )
-        })}
+        }) :
+        <TodaySkeleton  />
+      }
         
       </div>
 
@@ -177,10 +132,10 @@ export default function Home({setValue , toggleDrawer}) {
         </div>
         <h2 className="yesterday-day">{getYesterdaysDay}</h2>
 
-  
+        {yesterdayStatus === "completed" ?
         <GridList cellHeight={180} className={classes.gridList}>
        
-        {yesterday?.map((tile) => (
+         {yesterday?.map((tile) => (
           <GridListTile className={classes.gridListTile} key={tile.urlToImage}>
             <img src={tile.urlToImage || "https://elegalmetrology.jharkhand.gov.in/japnet/images/news.jpg"} alt={tile.title} />
             <a href={tile.url} target="_blank" rel="noopener noreferrer">
@@ -195,8 +150,14 @@ export default function Home({setValue , toggleDrawer}) {
             />
             </a>
           </GridListTile>
-        ))}
-      </GridList>
+
+        ))}</GridList> : 
+        <>
+        <PastSkeleton />
+       
+        </>
+        }
+      
       </div>
 
       <div className="parso">
@@ -205,7 +166,7 @@ export default function Home({setValue , toggleDrawer}) {
         </div>
         <h2 className="today">{getYesterdaysBeforeDay}</h2>
       </div>
-      {parso && 
+      {parsoStatus === "completed" ?
       <div className="card">
         <img
           className="width-image"
@@ -241,7 +202,7 @@ export default function Home({setValue , toggleDrawer}) {
             
           </List>
         </div>
-      </div>
+      </div> : <ParsoSkeleton />
       }
     </div>
   );

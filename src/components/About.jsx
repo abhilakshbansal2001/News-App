@@ -1,5 +1,5 @@
 import React from 'react'
-import {useHistory,Link } from 'react-router-dom'
+import {useHistory } from 'react-router-dom'
 import '../styles/about.css'
 import InstagramIcon from '@material-ui/icons/Instagram';
 import GitHubIcon from '@material-ui/icons/GitHub';

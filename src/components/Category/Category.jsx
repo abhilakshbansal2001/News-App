@@ -1,9 +1,6 @@
 import React,{useEffect} from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import "../styles/category.css";
-import { useLocation, useHistory } from "react-router-dom";
+import "./category.css";
+import { useHistory } from "react-router-dom";
 
 const catImages = {
   sports : "https://xioyuna.com/envato/yui/demo/Yui/img/categories/sports.jpg",

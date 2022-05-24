@@ -11,25 +11,30 @@ export async function topHeadline(){
     try{
         const {data} = await api.get('/topHeadlines')
 
-        console.log(data ,  'Tevhaj')
+        // console.log(data ,  'Tevhaj')
+        localStorage.setItem("topHeadline" , JSON.stringify(data));
+        // setMode(false)
         return data;
 
     }catch(error){
-        return error;
+        // alert(error.message + "hbhf hj j jh j")
+        
+        return JSON.parse(localStorage.getItem("topHeadline")) || error;
     }
     
 }
-export async function pastHeadline(from , to ,size , countrName){
+export async function pastHeadline(from , to ,size , countrName , name){
     try{
         const {data} = await api.get('/past', {
             params : {
                 from , to , size , countrName
             }
         })
+        localStorage.setItem(`${name}Headline` , JSON.stringify(data));
         return data;
 
     }catch(error){
-        return error;
+        return JSON.parse(localStorage.getItem(`${name}Headline`)) || error;
     }
     
 }
@@ -40,10 +45,11 @@ export async function countryNews(country="in"){
                 country
             }
         })
+        localStorage.setItem("countryNews" , JSON.stringify(data));
         return data;
 
     }catch(error){
-        return error;
+        return JSON.parse(localStorage.getItem("countryNews")) || error;
     }
     
 }
@@ -59,10 +65,11 @@ export async function discoverNews(country="in" , lang="en", category){
                 country , lang , category
             }
         })
+        localStorage.setItem("discoverNews" , JSON.stringify(data));
         return data;
 
     }catch(error){
-        return error;
+        return JSON.parse(localStorage.getItem("discoverNews")) || error;
     }
     
 }

@@ -6,8 +6,10 @@ import Typography from "@material-ui/core/Typography";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItem from "@material-ui/core/ListItem";
 import HistoryIcon from "@material-ui/icons/History";
-import {ArticleContext} from '../Context/ContextApi'
 import { useHistory } from "react-router-dom";
+import {  useDispatch } from 'react-redux';
+import { toggleDrawer  } from '../Reducers/Drawer'
+import { addArticle } from '../Reducers/Article'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,17 +32,19 @@ export default function ItemsList({news}) {
   let urlToImage = news.urlToImage || news.image;
   const publishedAt = news.publishedAt || news.published_at;
   const classes = useStyles();
-  const [,setArticle,,,,,,,,,,,,,,,,toggleDrawer] = useContext(ArticleContext);
-  const history = useHistory();
+
+  const dispatch = useDispatch()
   if(!urlToImage){
     urlToImage = "/images/newsCover.jpg"
   }
   function ArticleClick(){
-    setArticle({
-      urlToImage,author,publishedAt,title,description,content,url
-    });
+    // setArticle();
     // console.log(toggleDrawer(true) + " nufabifk ja kfj  ")
-    toggleDrawer(true)()
+    // toggleDrawer(true)()
+    dispatch(toggleDrawer(true))
+    dispatch(addArticle({
+      urlToImage,author,publishedAt,title,description,content,url
+    }))
     // history.push('/article')
   }
 

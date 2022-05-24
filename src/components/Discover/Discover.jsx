@@ -1,5 +1,5 @@
-import React, { useEffect, useState,useContext } from "react";
-import "../styles/discover.css";
+import React, { useEffect, useState } from "react";
+import "./discover.css";
 import StarIcon from "@material-ui/icons/Star";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -8,39 +8,22 @@ import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Typography from '@material-ui/core/Typography';
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
 import ImageIcon from "@material-ui/icons/Image";
-import WorkIcon from "@material-ui/icons/Work";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
-import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import IconButton from "@material-ui/core/IconButton";
-import Lists from "./List";
-import axios from 'axios'
-import {discoverNews , countryNews} from  "../api/news";
-import {Sources} from  "../api/source";
-import { Link,useHistory } from "react-router-dom";
-import {ArticleContext} from '../Context/ContextApi'
-
+import Lists from "../List";
+import { SourceSkeleton , CountryNewsSkeleton , DiscoverSkeleton } from './Skeleton'
+import { useHistory } from "react-router-dom";
+import { selectDiscoverHeadlines, fetchDiscoverHeadlines } from '../../Reducers/Discover/discover'
+import { selectSource, fetchSource } from '../../Reducers/Discover/source'
+import { selectCountryNews, fetchCountryNews } from '../../Reducers/Discover/countryNews'
+import { useSelector, useDispatch } from 'react-redux'
+import Skeleton from 'react-loading-skeleton'
 
 export default function Discover({setValue}) {
-  const history = useHistory();
-  // const settings = {
-  //   className: "center",
-  //   centerMode: true,
-  //   infinite: true,
-  //   centerPadding: "-50px ",
-  //   // slidesToShow: 3,
-  //   slidesToScroll: 3,
-  //   // dots:true,
-  //   speed: 500,
-  //   dotsClass: "dotClass",
-  //   slidesToShow: window.innerWidth > 980 ? 4 : 2
-  // };
+
   const settings = {
     dots: false,
     infinite: true,
@@ -65,92 +48,51 @@ export default function Discover({setValue}) {
     prevArrow: <SamplePrevArrow />
   };
   // let slider;
-  const [slider, setSlider] = useState("");
-  const [,,, ,, ,, ,discover, setDiscover,sources,setSources,mustSee,setMustSee] = useContext(ArticleContext);
+
+
+    const dispatch = useDispatch()
+    //Today
+    const discover = useSelector(selectDiscoverHeadlines)
+    const discoverStatus = useSelector(state => state.discover.status)
+
+    useEffect(() => {
+      if(discoverStatus == "idle"){
+        dispatch(fetchDiscoverHeadlines());
+      }
+    }, [dispatch , discover])
+
+
+    const sources = useSelector(selectSource)
+    const sourceStatus = useSelector(state => state.sources.status)
+
+    useEffect(() => {
+      if(sourceStatus == "idle"){
+        dispatch(fetchSource());
+      }
+    }, [dispatch , sources])
+    
+    const countryNews = useSelector(selectCountryNews)
+    const countryNewsStatus = useSelector(state => state.countryNews.status)
+
+    useEffect(() => {
+      if(countryNewsStatus == "idle"){
+        dispatch(fetchCountryNews());
+      }
+    }, [dispatch , countryNews])
+
+ 
+    
+    
 
   
-  const [country, setCountry] = useState(null);
   const [countryDiscover, setCountryDiscover] = useState(null);
   // const [sources, setSources] = useState();
   // const [mustSee, setMustSee] = useState();
-
+    const s = new Array(20).fill(0);
+    // console.log(s , " Hello worldhjc hj  ")
   const category = JSON.parse(localStorage.getItem("genre") ) || ["general"];
   const lang = JSON.parse(localStorage.getItem("lang")) || ["en"];
-  // useEffect(() => {
-  //   axios.get("http://ip-api.com/json")
-  //     .then(res => {
-  //       console.log(res , "hello");
-  //       const name = res?.data?.country;
-  //       const code = res?.data?.countryCode?.toLowerCase();
-  //       // if(code){
-  //         // `https://newsapi.org/v2/top-headlines?country=${code}&pageSize=6&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
-          
-          
 
-  //       // }
-        
-  //       setCountry({name , code})
-  //     })
-
-  
-  //   return () => {
-      
-  //   }
-  // }, [])
-  
-
-  useEffect(() => {
-    const ac = new AbortController();
-    // `https://newsapi.org/v2/top-headlines?country=in&${category && category[0] && `category=${category[0]}`}&pageSize=20&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
-    countryNews()
-    .then((data) => {
-      // console.log(data , "nuibkj ng i7");
-      if(Array.isArray(data))
-      setCountryDiscover(data);
-      else throw "Error"
-    })
-    .catch((err) => {
-      console.log("something went wrong",err);
-    })
-
-    if(!discover)
-    // axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=20&countries=${code}&languages=${lang.join(",")}&categories=${category.join(",")}`)
-    discoverNews("in" , lang , category)
-    .then((data) => {
-      // console.log(data , "DISCOVWER")
-      if(Array.isArray(data))
-      setDiscover(data);
-      else throw "Error"
-    })
-    .catch((err) => {
-      console.log("something went wrong",err);
-    })
-
-    
-
-  //Sources
-  if(!sources)
-  
-  // `https://newsapi.org/v2/sources?country=in&pageSize=15&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
-  // axios.get(`http://api.mediastack.com/v1/sources?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&keywords=${name}`)
-  // .then(data => JSON.stringify(data))
-  Sources()
-  .then((data) => {
-    if(Array.isArray(data))
-    setSources(data);
-    else throw "Error"
-    // console.log(JSON.stringify(data) + " source ");
-    // console.log(res.data);
-  })
-  .catch((err) => {
-    console.log("something went wrong",err);
-  })
-  setValue('discover')
-   return () => ac.abort();
-
-
-
-  }, [])
 
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
@@ -188,7 +130,6 @@ export default function Discover({setValue}) {
               d="M0,32L30,64C60,96,120,160,180,176C240,192,300,160,360,128C420,96,480,64,540,48C600,32,660,32,720,32C780,32,840,32,900,42.7C960,53,1020,75,1080,112C1140,149,1200,203,1260,218.7C1320,235,1380,213,1410,202.7L1440,192L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"
             ></path>
           </svg>
-        {/* <div className="gradient"> */}
           <div className="discover-title">
             <div>
               <h4>THIS WEEK</h4>
@@ -203,20 +144,11 @@ export default function Discover({setValue}) {
           
         {/* </div> */}
       <div className="discover-content">
-        {/* <div className="carousel"> */}
           <Slider {...settings}>
-            {/* <div className="slider-content">
-              <img
-                src="https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500 "
-                height="80%"
-                width="80%"
-                alt=""
-              />
-              <div className="black-gradient"></div>
-              <div className="text">Something Title heu this is slick</div>
-            </div> */}
+            
           
-            {discover?.map(dis => {
+            {discoverStatus==="completed" ?
+              discover?.map(dis => {
               return <a className="slider-content" target="_BLANK " href={dis.url}>
                 <div className="slider-image">
                   <img
@@ -230,7 +162,15 @@ export default function Discover({setValue}) {
                 </div>
               
             </a>
-            })}
+            }) : 
+            new Array(15).fill(0).map(el =>(
+              <div style={{textAlign : "center"}}>
+              <Skeleton style={{maxHeight:"550px" , margin:"0 auto" }} height={"50vh"} width={"90%"} />
+              </div>
+              
+        ))
+            
+            }
             
             
             
@@ -246,8 +186,8 @@ export default function Discover({setValue}) {
           
         </div>
         <div className="source-content">
-          <List>
-            {sources?.map(source => {
+        {sourceStatus === "completed" ? <List>
+             {sources?.map(source => {
               return (
                 <>
                 <a target="_blank" href={source.url} style={{ overflowX: "visible", color: "black" ,textDecoration:'none'}}>
@@ -298,49 +238,17 @@ export default function Discover({setValue}) {
             </>
               )
             })}
+            </List>: <SourceSkeleton />
+            }
             
-          </List>
+          
         </div>
       </div>
-      {/* <div className="must-see">
-        <div className="must-see-header">
-          <h2>MUST SEE</h2>
-        </div>
-        <div className="must-see-content">
-          <Slider ref={(c) => setSlider(c)} {...settings2}>
-
-          {discover && discover.data.articles.slice(10,15).map((news) => {
-            
-            return (
-            <div className="must-see-card">
-              <img
-                className="must-see-card-img"
-                src={news.urlToImage}
-                alt={news.title}
-              />
-              <div className="must-see-overlay"></div>
-              <div className="must-see-text">
-                {news.title}
-              </div>
-            </div>
-
-            )
-
-
-          })}
-
-
-           
-          </Slider>
-        </div>
-
-        <Divider style={{ marginTop: "2rem" }} />
-      </div> */}
+      
       <div className="popular">
         <h2
           style={{
             fontWeight: "800",
-            // marginBottom:'-2%'
             paddingLeft: "5%",
             marginBottom: "3.4rem"
           }}
@@ -351,19 +259,17 @@ export default function Discover({setValue}) {
         <List
           style={{
             width: "100%",
-            // maxWidth: "36ch"
             padding: "0 5%",
             className: "listCard",
             paddingBottom: "75px"
-            // transform: "translateY(-15vh)"
           }}
         >
-          {countryDiscover?.map((news) => {
+          {countryNewsStatus === 'completed' ? countryNews?.map((news) => {
             
             return <Lists news={news}  />
 
 
-          })}
+          }) : <CountryNewsSkeleton />}
          
         </List>
       </div>

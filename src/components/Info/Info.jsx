@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import "../styles/info.css";
+import "./info.css";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Drawer from './Drawer'
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
-import ListItemText from "@material-ui/core/ListItemText";
 import Select from "@material-ui/core/Select";
-import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
 import TextField from "@material-ui/core/TextField";
 import EditIcon from "@material-ui/icons/Edit";
@@ -100,8 +97,6 @@ export default function Info({setValue}) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   // const [name, setname] = useState("");
-  const [modalEmail, setModalEmail] = useState("");
-  const [personName, setPersonName] = React.useState([]);
   const [language, setLanguage] = React.useState([]);
   const [genre, setGenre] = React.useState([]);
   // const [country, setCountry] = React.useState(null);

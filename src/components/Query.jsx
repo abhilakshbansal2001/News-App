@@ -41,28 +41,21 @@ export default function Query({setValue,...props}) {
   const classes = useStyles();
   const history = useHistory();
   const [hasMore, setHasMore] = useState(true);
-  const [items, setItems] = useState();
+  const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
-  let lang = JSON.parse(localStorage.getItem("lang") )|| ["en"];
   // console.log(lang.join(",") + " Lanfganjfa ")
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
   let query = useQuery();
   const searchQuery = query.get("q");
-  // let page = 1;
-  // `https://newsapi.org/v2/everything?q=${searchQuery.toLowerCase()}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`
   useEffect(() => {
-      // axios.get(`http://api.mediastack.com/v1/news?access_key=58c8ce96564a31ebb6e07ae5bb0f87fa&limit=20&languages=${lang.join(",")}&keywords=${searchQuery.toLowerCase()}`)
       querySearch(searchQuery.toLowerCase() , page)
     .then((data) => {
-      // console.log(data , "Hekokeoko");
       if(Array.isArray(data))
       setItems(data);
     else throw "Error"
 
-      // console.log(data.data.articles);
-      // console.log(data);
     })
     .catch(() => {
       console.log("something went wrong");
@@ -70,13 +63,10 @@ export default function Query({setValue,...props}) {
   }, [])
 
 
-  // setValue('');
   
-  // console.log(query.get("q"), query.keys().next());
-  // axios.get(`https://newsapi.org/v2/everything?q=${searchQuery.toLowerCase()}&page=${page}&sortBy=popularity&apiKey=3d9acd8ce84c433ab0fba12097fcadc6`)
 
   const fetchMoreData = () => {
-    if (items.length >= 100) {
+    if (items?.length >= 100) {
       setHasMore(false);
       return;
     }
@@ -87,11 +77,10 @@ export default function Query({setValue,...props}) {
       console.log(ta);
       if(!Array.isArray(ta)){
         setHasMore(false)
-        return;
       }
-
+      else 
       setItems(prev => {
-        return [...prev , ...ta]
+      return [...prev , ...ta]  
       })
     })
     .catch(() => {
@@ -117,7 +106,6 @@ export default function Query({setValue,...props}) {
             <Typography variant="h6" className={classes.title}>
               NEWS
             </Typography>
-            {/* <Button color="inherit">Login</Button> */}
           </Toolbar>
         </AppBar>
       </div>
@@ -155,7 +143,6 @@ export default function Query({setValue,...props}) {
             >
               { items?.map((news) => (
                
-              //  <Lists url={news.url} title={news.title} content={news.content} publishedAt={news.publishedAt} author={news.author} urlToImage={news.urlToImage} description={news.description}   />
                <Lists news={news}  />
 
               ))}

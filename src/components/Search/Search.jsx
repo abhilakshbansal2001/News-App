@@ -13,7 +13,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import LabelIcon from "@material-ui/icons/Label";
 import { useHistory, Link } from "react-router-dom";
-import "../styles/search.css";
+import "./search.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {

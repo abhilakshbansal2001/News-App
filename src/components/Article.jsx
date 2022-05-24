@@ -1,28 +1,23 @@
-import React,{useState,useContext, useEffect} from "react";
+import React from "react";
 import Divider from "@material-ui/core/Divider";
 import "../styles/article.css";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import HistoryIcon from "@material-ui/icons/History";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import { useLocation, useHistory } from "react-router-dom";
-import {ArticleContext} from '../Context/ContextApi'
+import {  useHistory } from "react-router-dom";
+import { useDispatch , useSelector } from 'react-redux';
+import { toggleDrawer } from '../Reducers/Drawer'
+import { selectArticle } from '../Reducers/Article'
 
 export default function Article() {
   const history = useHistory();
-  // setValue('');
-  // const [article,setArticle] = useContext(ArticleContext);
-  const [article,,,,,,,,,,,,,,,,,toggleDrawer] = useContext(ArticleContext);
 
-  // console.log(article , "hfrdtr");
-  // useEffect(() => {
-  //   if(!article){
-  //     if(history.length == 0){
-  //       history.replace("/home")
-  //     }else{
-  //       history.goBack();
-  //     }
-  //   }
-  // } , [])
+  const dispatch = useDispatch()
+
+
+  const article = useSelector(selectArticle)
+
+
   return (
     <>
     {article && <div className="article">
@@ -35,16 +30,13 @@ export default function Article() {
           backgroundColor: "#97978e",
           height: "6px",
           borderRadius: "50px",
-          // margin: "10px auto",
-          // marginTop: "25px",
-          // padding: "0 5% !important"
         }}
         className="line"
       ></div>
         <HighlightOffIcon
           className="close-article"
           onClick={() => {
-            toggleDrawer(false)();
+            dispatch(toggleDrawer(false));
           }}
           
         />
@@ -85,11 +77,9 @@ export default function Article() {
             opacity:'0.8'
           }}
           >
-            {/* <span className="para-heading">W</span> */}
           {article.description}
           </p>
           <p>
-            {/* <span className="para-heading">W</span> */}
           {article.content && article.content.split("[")[0]} <a href={article.url} target="_blank" rel="noopener noreferrer">Learn More</a>
           </p>
           <Divider
