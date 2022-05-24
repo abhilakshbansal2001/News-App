@@ -13,10 +13,7 @@ var urlsToCache = [
   '/information',
   '/about',
   '/',
-  // '/main.648a5a2479770ae09136.hot-update.js',
-  // '/static/js/1.chunk.js',
-  // '/main.d306505e6b8e6ecbf939.hot-update.js',
-  
+
 
 ];
 
@@ -26,47 +23,12 @@ this.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
-        console.log('Opened cache');
+        // console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
   );
 });
 
-// Cache and return requests
-// this.addEventListener('fetch', event => {
-//   event.respondWith(
-//     caches.match(event.request)
-//       .then(function(response) {
-//         if (response) {
-//           return response;
-//         }
-//         return fetch(event.request);
-//       }
-//     )
-//   );
-
-
-  // event.respondWith((async () => {
-  //   const cachedResponse = await caches.match(event.request);
-  //   if (cachedResponse) {
-  //     return cachedResponse;
-  //   }
-  
-  //   const response = await fetch(event.request);
-  
-  //   if (!response || response.status !== 200 || response.type !== 'basic') {
-  //     return response;
-  //   }
-  
-  //   if (ENABLE_DYNAMIC_CACHING) {
-  //     const responseToCache = response.clone();
-  //     const cache = await caches.open(DYNAMIC_CACHE)
-  //     await cache.put(event.request, response.clone());
-  //   }
-  
-  //   return response;
-  // }));
-// });
 
 this.addEventListener('fetch', event => {
   if(!navigator.onLine)
@@ -86,19 +48,3 @@ this.addEventListener('fetch', event => {
       })
   )
 });
-
-// Update a service worker
-// self.addEventListener('activate', event => {
-//   var cacheWhitelist = ['news-pwa'];
-//   event.waitUntil(
-//     caches.keys().then(cacheNames => {
-//       return Promise.all(
-//         cacheNames.map(cacheName => {
-//           if (cacheWhitelist.indexOf(cacheName) === -1) {
-//             return caches.delete(cacheName);
-//           }
-//         })
-//       );
-//     })
-//   );
-// });

@@ -29,7 +29,7 @@ export default function Discover({setValue}) {
     infinite: true,
     slidesToShow: window.innerWidth > 980 ? 5 : window.innerWidth > 500 ? 2 : 1,
     slidesToScroll: 1,
-    autoplay: true,
+    // autoplay: true,
     speed: 2000,
     arrows:false,
     autoplaySpeed: 2000,

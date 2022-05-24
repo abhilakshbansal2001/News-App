@@ -52,12 +52,9 @@ export default function ItemsList({news}) {
     <div
       style={{
         padding: "0",
-        // display: "flex",
-        // justifyContent: "space-between",
         width: "100%",
-        cursor:'pointer'
-        // alignItems: "center"
-        
+        cursor:'pointer',
+        overflow:"hidden"        
       }}
 
       onClick={ArticleClick}
@@ -126,4 +123,3 @@ export default function ItemsList({news}) {
     </div>
   );
 }
-
