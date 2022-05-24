@@ -1,8 +1,10 @@
 var CACHE_NAME = 'news-pwa';
 var urlsToCache = [
-  // '/build/js/bundle.js',
-  // '/build/js/0.chunk.js',
-  // '/build/js/main.chunk.js',
+  // '/static/js/bundle.js',
+  // '/static/js/0.chunk.js',
+  // '/static/js/main.chunk.js',
+  '/static/js/main.7591caf0.chunk.js',
+  '/static/js/2.f12ecddc.chunk.js',
   '/index.html',
   '/home',
   '/category',
